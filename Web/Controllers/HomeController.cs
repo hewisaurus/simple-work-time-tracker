@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using BCrypt;
 using Microsoft.AspNetCore.Mvc;
 using SimpleWorkTimeTracker.Models;
 
@@ -13,7 +14,8 @@ namespace SimpleWorkTimeTracker.Controllers
 
         public IActionResult About()
         {
-            ViewData["Message"] = "Your application description page.";
+            //ViewData["Message"] = "Your application description page.";
+            ViewData["Message"] = Common.BCrypt.BCrypt.GeneratePasswordHash("123456");
 
             return View();
         }

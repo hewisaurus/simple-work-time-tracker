@@ -3,7 +3,7 @@ using BCrypt;
 
 namespace Common.BCrypt
 {
-    static class BCrypt
+    public static class BCrypt
     {
         private const int Rounds = 13;
 
