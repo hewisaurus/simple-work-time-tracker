@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SimpleWorkTimeTracker.Extensions;
 using SimpleWorkTimeTracker.Models;
 using SimpleWorkTimeTracker.Models.AccountViewModels;
 using SimpleWorkTimeTracker.Services;
