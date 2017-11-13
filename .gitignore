@@ -289,3 +289,4 @@ __pycache__/
 
 # Manually ignored files
 appsettings.json
+/Common/BCrypt/ServerSideKey.cs
