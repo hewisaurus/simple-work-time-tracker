@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Web", "Web\Web.csproj", "{4
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Database.Interfaces", "Database.Interfaces\Database.Interfaces.csproj", "{3CB5A41B-5F99-4215-AEEB-F15873630E0F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Database", "Database\Database.csproj", "{14F265E9-C7A5-402E-ACDE-B8CA8C5BA294}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{3CB5A41B-5F99-4215-AEEB-F15873630E0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3CB5A41B-5F99-4215-AEEB-F15873630E0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3CB5A41B-5F99-4215-AEEB-F15873630E0F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14F265E9-C7A5-402E-ACDE-B8CA8C5BA294}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14F265E9-C7A5-402E-ACDE-B8CA8C5BA294}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14F265E9-C7A5-402E-ACDE-B8CA8C5BA294}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14F265E9-C7A5-402E-ACDE-B8CA8C5BA294}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
