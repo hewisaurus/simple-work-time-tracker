@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Database.Interfaces.Repositories;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -20,11 +23,19 @@ namespace SimpleWorkTimeTracker.Controllers
         //private readonly UserManager<ApplicationUser> _userManager;
         //private readonly SignInManager<ApplicationUser> _signInManager;
         //private readonly IEmailSender _emailSender;
-        private readonly ILogger _logger;
+       // private readonly ILogger _logger;
 
-        public AccountController(ILogger logger)
+        private readonly IAuthentication _authentication;
+
+        private readonly IAuthenticationQueryRepository _dbAuthenticationQuery;
+
+        public AccountController(
+            //ILogger logger, 
+            IAuthentication authentication, IAuthenticationQueryRepository dbAuthenticationQuery)
         {
-            _logger = logger;
+            //_logger = logger;
+            _authentication = authentication;
+            _dbAuthenticationQuery = dbAuthenticationQuery;
         }
 
         //public AccountController(
@@ -47,7 +58,7 @@ namespace SimpleWorkTimeTracker.Controllers
         public async Task<IActionResult> Login(string returnUrl = null)
         {
             // Clear the existing external cookie to ensure a clean login process
-            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+            await HttpContext.SignOutAsync();
 
             ViewData["ReturnUrl"] = returnUrl;
             return View();
@@ -61,34 +72,35 @@ namespace SimpleWorkTimeTracker.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                // This doesn't count login failures towards account lockout
-                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                //var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
-                //if (result.Succeeded)
-                //{
-                //    _logger.LogInformation("User logged in.");
-                //    return RedirectToLocal(returnUrl);
-                //}
-                //if (result.RequiresTwoFactor)
-                //{
-                //    return RedirectToAction(nameof(LoginWith2fa), new { returnUrl, model.RememberMe });
-                //}
-                //if (result.IsLockedOut)
-                //{
-                //    _logger.LogWarning("User account locked out.");
-                //    return RedirectToAction(nameof(Lockout));
-                //}
-                //else
-                //{
-                //    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                //    return View(model);
-                //}
+                var authenticationResult = await _authentication.AuthenticateAsync(model.Email, model.Password);
+                if (authenticationResult.Success)
+                {
+                    // Get the details required for the claims
+                    var dbUser = await _dbAuthenticationQuery.GetDetailsRequiredForClaimsAsync(model.Email);
+                    // Add claims
+                    var claims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.GivenName, dbUser.Firstname),
+                        new Claim(ClaimTypes.Surname, dbUser.Lastname),
+                        new Claim(ClaimTypes.Email, dbUser.Email),
+                        new Claim(ClaimTypes.Name, $"{dbUser.Firstname} {dbUser.Lastname}"),
+                        new Claim(ClaimTypes.NameIdentifier, dbUser.Email)
+                    };
+                    var claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme));
+                    await HttpContext.SignInAsync(claimsPrincipal);
+
+                    //_logger.LogInformation($"{model.Email} logged in.");
+                    return RedirectToLocal(returnUrl);
+                }
+
+                ModelState.AddModelError(string.Empty, authenticationResult.Message);
+                return View(model);
             }
 
             // If we got this far, something failed, redisplay form
             return View(model);
         }
-        
+
         [HttpGet]
         [AllowAnonymous]
         public IActionResult Lockout()
@@ -142,7 +154,7 @@ namespace SimpleWorkTimeTracker.Controllers
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 
-        
+
 
         [HttpGet]
         public IActionResult AccessDenied()

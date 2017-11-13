@@ -1,4 +1,9 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Database;
+using Database.Dapper;
+using Database.Interfaces.Repositories;
+using Database.Repositories;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -29,8 +34,21 @@ namespace SimpleWorkTimeTracker
             //    .AddEntityFrameworkStores<ApplicationDbContext>()
             //    .AddDefaultTokenProviders();
 
+            services.ConfigureApplicationCookie(opt => opt.LoginPath = "/Account/Login");
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme);
+
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
+            // Auth
+            services.AddTransient<IAuthentication, Authentication>();
+            // Database interfaces
+            //For<IConnectionFactory>()
+            //    .Use<MySqlConnectionFactory>()
+            //    .Ctor<string>("connectionString")
+            //    .Is(repositoryConnectionString);
+            var connectionString = Configuration["ConnectionStrings:DefaultConnection"];
+            services.AddSingleton<IConnectionFactory, MysqlConnectionFactory>(p => new MysqlConnectionFactory(connectionString));
+            services.AddSingleton<IAuthenticationQueryRepository, AuthenticationQueryRepository>();
 
             services.AddMvc();
         }

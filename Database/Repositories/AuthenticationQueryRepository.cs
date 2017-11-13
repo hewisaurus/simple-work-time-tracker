@@ -24,5 +24,20 @@ namespace Database.Repositories
         {
             throw new NotImplementedException();
         }
+
+        public async Task<Authentication> GetByEmailAddressAsync(string emailAddress)
+        {
+            return await QueryAsync(q => q.QueryFirstOrDefaultAsync<Authentication>(AuthenticationSql.GetByEmail, new { emailAddress }));
+        }
+
+        public async Task<bool> AuthenticateUserAsync(string emailAddress, string passwordHash)
+        {
+            return await QueryAsync(q => q.QueryFirstOrDefaultAsync<int>(AuthenticationSql.AuthenticateEmailAndPassword, new { emailAddress, passwordHash })) == 1;
+        }
+
+        public async Task<Authentication> GetDetailsRequiredForClaimsAsync(string emailAddress)
+        {
+            return await QueryAsync(q => q.QueryFirstOrDefaultAsync<Authentication>(AuthenticationSql.GetClaimsInformationByEmail, new { emailAddress }));
+        }
     }
 }

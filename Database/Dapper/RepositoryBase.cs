@@ -10,7 +10,7 @@ namespace Database.Dapper
     public abstract class RepositoryBase
     {
         private readonly IConnectionFactory _connectionFactory;
-        private readonly string _connectionString;
+        private string _connectionString;
 
         protected RepositoryBase(IConnectionFactory connectionFactory, string connectionString)
         {
