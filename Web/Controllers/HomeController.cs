@@ -14,8 +14,7 @@ namespace SimpleWorkTimeTracker.Controllers
 
         public IActionResult About()
         {
-            //ViewData["Message"] = "Your application description page.";
-            ViewData["Message"] = Common.BCrypt.BCrypt.GeneratePasswordHash("123456");
+            ViewData["Message"] = "Your application description page.";
 
             return View();
         }
