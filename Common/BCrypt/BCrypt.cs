@@ -1,4 +1,5 @@
-﻿using DevOne.Security.Cryptography.BCrypt;
+﻿
+using BCrypt;
 
 namespace Common.BCrypt
 {
