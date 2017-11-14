@@ -4,12 +4,13 @@ using BCrypt;
 using Database.Interfaces.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SimpleWorkTimeTracker.Helpers;
 using SimpleWorkTimeTracker.Models;
 
 namespace SimpleWorkTimeTracker.Controllers
 {
     [Authorize]
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         private readonly IPersonStatusQueryRepository _personStatusQuery;
 
