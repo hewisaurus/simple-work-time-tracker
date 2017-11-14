@@ -15,8 +15,11 @@ namespace SimpleWorkTimeTracker.DependencyInjection
     {
         public DbRepositoryRegistry(string connectionString)
         {
+            // DB Connection
             For<IConnectionFactory>().Use<MysqlConnectionFactory>().Ctor<string>("connectionString").Is(connectionString);
+            // Tables
             For<IPersonQueryRepository>().Use<PersonQueryRepository>();
+            For<IPersonStatusQueryRepository>().Use<PersonStatusQueryRepository>();
         }
     }
 }
