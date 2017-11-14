@@ -3,7 +3,7 @@ using Database.Interfaces.Models.Base;
 
 namespace Database.Interfaces.Models
 {
-    public class Authentication : ModelBase
+    public class Person : ModelBase
     {
         public string Firstname { get; set; }
         public string Lastname { get; set; }

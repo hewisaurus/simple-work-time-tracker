@@ -22,12 +22,12 @@ namespace SimpleWorkTimeTracker.Controllers
     {
         private readonly IAuthentication _authentication;
 
-        private readonly IAuthenticationQueryRepository _dbAuthenticationQuery;
+        private readonly IPersonQueryRepository _dbPersonQuery;
 
-        public AccountController(IAuthentication authentication, IAuthenticationQueryRepository dbAuthenticationQuery)
+        public AccountController(IAuthentication authentication, IPersonQueryRepository dbPersonQuery)
         {
             _authentication = authentication;
-            _dbAuthenticationQuery = dbAuthenticationQuery;
+            _dbPersonQuery = dbPersonQuery;
         }
         
         [TempData]
@@ -56,7 +56,7 @@ namespace SimpleWorkTimeTracker.Controllers
                 if (authenticationResult.Success)
                 {
                     // Get the details required for the claims
-                    var dbUser = await _dbAuthenticationQuery.GetDetailsRequiredForClaimsAsync(model.Email);
+                    var dbUser = await _dbPersonQuery.GetDetailsRequiredForClaimsAsync(model.Email);
                     // Add claims
                     var claims = new List<Claim>()
                     {

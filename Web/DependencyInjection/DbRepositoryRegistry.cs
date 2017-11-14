@@ -6,7 +6,6 @@ using Database;
 using Database.Dapper;
 using Database.Interfaces.Repositories;
 using Database.Repositories;
-using SimpleWorkTimeTracker.DITest;
 using StructureMap;
 using StructureMap.Pipeline;
 
@@ -18,7 +17,7 @@ namespace SimpleWorkTimeTracker.DependencyInjection
         {
             For<IConnectionFactory>().Use<MysqlConnectionFactory>().Ctor<string>("connectionString").Is(connectionString);
 
-            For<IAuthenticationQueryRepository>().Use<AuthenticationQueryRepository>();
+            For<IPersonQueryRepository>().Use<PersonQueryRepository>();
 
             //For<IMessagingService>().LifecycleIs(Lifecycles.Singleton).Use<StructuremapMessagingService>();
 

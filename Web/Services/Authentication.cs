@@ -9,11 +9,11 @@ namespace SimpleWorkTimeTracker.Services
 {
     public class Authentication : IAuthentication
     {
-        private readonly IAuthenticationQueryRepository _dbAuthenticationQuery;
+        private readonly IPersonQueryRepository _dbPersonQuery;
 
-        public Authentication(IAuthenticationQueryRepository dbAuthenticationQuery)
+        public Authentication(IPersonQueryRepository dbPersonQuery)
         {
-            _dbAuthenticationQuery = dbAuthenticationQuery;
+            _dbPersonQuery = dbPersonQuery;
         }
 
         public async Task<ReturnValue> AuthenticateAsync(string emailAddress, string password)
@@ -22,7 +22,7 @@ namespace SimpleWorkTimeTracker.Services
 
             try
             {
-                var dbUser = await _dbAuthenticationQuery.GetByEmailAddressAsync(emailAddress);
+                var dbUser = await _dbPersonQuery.GetByEmailAddressAsync(emailAddress);
                 var success = Common.BCrypt.BCrypt.Validate(password, dbUser.Password);
                 if (success)
                 {
