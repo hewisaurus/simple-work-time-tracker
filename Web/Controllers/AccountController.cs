@@ -64,7 +64,8 @@ namespace SimpleWorkTimeTracker.Controllers
                         new Claim(ClaimTypes.Surname, dbUser.Lastname),
                         new Claim(ClaimTypes.Email, dbUser.Email),
                         new Claim(ClaimTypes.Name, $"{dbUser.Firstname} {dbUser.Lastname}"),
-                        new Claim(ClaimTypes.NameIdentifier, dbUser.Email)
+                        new Claim(ClaimTypes.NameIdentifier, dbUser.Email),
+                        new Claim(ClaimTypes.PrimarySid, dbUser.Id.ToString())
                     };
                     var claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme));
                     await HttpContext.SignInAsync(claimsPrincipal);
