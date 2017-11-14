@@ -22,8 +22,8 @@ namespace SimpleWorkTimeTracker.Services
 
             try
             {
-                var passwordHash = Common.BCrypt.BCrypt.GeneratePasswordHash(password);
-                var success = await _dbAuthenticationQuery.AuthenticateUserAsync(emailAddress, passwordHash);
+                var dbUser = await _dbAuthenticationQuery.GetByEmailAddressAsync(emailAddress);
+                var success = Common.BCrypt.BCrypt.Validate(password, dbUser.Password);
                 if (success)
                 {
                     returnValue.Success = true;

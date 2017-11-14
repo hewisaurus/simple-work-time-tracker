@@ -10,12 +10,12 @@ namespace Database.Dapper
     public abstract class RepositoryBase
     {
         private readonly IConnectionFactory _connectionFactory;
-        private string _connectionString;
+        private readonly string _connectionString;
 
-        protected RepositoryBase(IConnectionFactory connectionFactory, string connectionString)
+        protected RepositoryBase(IConnectionFactory connectionFactory)
         {
             _connectionFactory = connectionFactory;
-            _connectionString = connectionString;
+            _connectionString = _connectionFactory.GetConnectionString();
         }
 
         protected async Task<DbConnection> OpenConnectionAsync()

@@ -8,8 +8,7 @@ namespace Database.Sql
     {
         public const string GetById = "SELECT * FROM Authentication WHERE Id = @id";
         public const string GetByEmail = "SELECT * FROM Authentication WHERE Email = @emailAddress";
-        public const string GetClaimsInformationByEmail = "SELECT Id, Firstname, Lastname, Email, '**********' AS Password, Created, Modified FROM Authentication WHERE Email = @email";
-        public const string AuthenticateEmailAndPassword = "SELECT COUNT(1) AS AuthenticationSuccess FROM Authentication WHERE Email = @emailAddress AND Password = @passwordHash";
+        public const string GetClaimsInformationByEmail = "SELECT Id, Firstname, Lastname, Email, '**********' AS Password, Created, Modified FROM Authentication WHERE Email = @emailAddress";
         public const string GetAll = "SELECT * FROM Authentication";
     }
 }

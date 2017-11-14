@@ -1,4 +1,5 @@
-﻿using Database;
+﻿using System;
+using Database;
 using Database.Dapper;
 using Database.Interfaces.Repositories;
 using Database.Repositories;
@@ -9,9 +10,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SimpleWorkTimeTracker.DependencyInjection;
 //using SimpleWorkTimeTracker.Data;
 using SimpleWorkTimeTracker.Models;
 using SimpleWorkTimeTracker.Services;
+using StructureMap;
 
 namespace SimpleWorkTimeTracker
 {
@@ -25,32 +28,30 @@ namespace SimpleWorkTimeTracker
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            //services.AddDbContext<ApplicationDbContext>(options =>
-            //    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
-            //services.AddIdentity<ApplicationUser, IdentityRole>()
-            //    .AddEntityFrameworkStores<ApplicationDbContext>()
-            //    .AddDefaultTokenProviders();
-
-            services.ConfigureApplicationCookie(opt => opt.LoginPath = "/Account/Login");
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme);
-
-            // Add application services.
-            services.AddTransient<IEmailSender, EmailSender>();
-            // Auth
-            services.AddTransient<IAuthentication, Authentication>();
-            // Database interfaces
-            //For<IConnectionFactory>()
-            //    .Use<MySqlConnectionFactory>()
-            //    .Ctor<string>("connectionString")
-            //    .Is(repositoryConnectionString);
-            var connectionString = Configuration["ConnectionStrings:DefaultConnection"];
-            services.AddSingleton<IConnectionFactory, MysqlConnectionFactory>(p => new MysqlConnectionFactory(connectionString));
-            services.AddSingleton<IAuthenticationQueryRepository, AuthenticationQueryRepository>();
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, x =>
+                {
+                    x.AccessDeniedPath = "/Account/Forbidden";
+                    x.LoginPath = "/Account/Login";
+                });
 
             services.AddMvc();
+
+            // Get the connection string from config
+            var connectionString = Configuration["ConnectionStrings:DefaultConnection"];
+
+            // Initialise StructureMap
+            var container = new Container();
+            container.Configure(x =>
+            {
+                x.AddRegistry(new ServicesRegistry());
+                x.AddRegistry(new DbRepositoryRegistry(connectionString));
+                x.Populate(services);
+            });
+
+            return container.GetInstance<IServiceProvider>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -10,7 +10,7 @@ namespace Database.Repositories
 {
     public class AuthenticationQueryRepository : RepositoryBase, IAuthenticationQueryRepository
     {
-        public AuthenticationQueryRepository(IConnectionFactory connectionFactory, string connectionString) : base(connectionFactory, connectionString)
+        public AuthenticationQueryRepository(IConnectionFactory connectionFactory) : base(connectionFactory)
         {
 
         }
@@ -28,11 +28,6 @@ namespace Database.Repositories
         public async Task<Authentication> GetByEmailAddressAsync(string emailAddress)
         {
             return await QueryAsync(q => q.QueryFirstOrDefaultAsync<Authentication>(AuthenticationSql.GetByEmail, new { emailAddress }));
-        }
-
-        public async Task<bool> AuthenticateUserAsync(string emailAddress, string passwordHash)
-        {
-            return await QueryAsync(q => q.QueryFirstOrDefaultAsync<int>(AuthenticationSql.AuthenticateEmailAndPassword, new { emailAddress, passwordHash })) == 1;
         }
 
         public async Task<Authentication> GetDetailsRequiredForClaimsAsync(string emailAddress)
